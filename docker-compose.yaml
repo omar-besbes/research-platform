@@ -42,8 +42,9 @@ services:
     env_file:
       - apps/frontend/.env.example
     environment:
-      - BACKEND_URL=http://backend:3011
-      - MINIO_WRAPPER_HTTP_URL=http://wrapper:1206
+      - BACKEND_URL=http://backend:3001
+      - MINIO_WRAPPER_HTTP_URL=http://go-wrapper:1206
+      - NEXT_PUBLIC_MINIO_WRAPPER_WEBSOCKET_URL=ws://go-wrapper:1206
     networks:
       - app_network
 
