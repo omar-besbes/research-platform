@@ -1,10 +1,14 @@
 trigger:
-  - main
-  - dev
-  - azure-pipelines
+  batch: true
+  branches:
+    include:
+      - main
+      - dev
+      - azure-pipelines
 
 pool:
   name: Azure Pipelines
+  demands: Limit -equals DisAbleParallel
   vmImage: 'ubuntu-latest'
 
 variables:
