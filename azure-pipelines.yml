@@ -21,6 +21,10 @@ stages:
       - job: BuildJob
         displayName: Build Docker Images
         steps:
+          - script: |
+              git submodule init
+              git submodule update
+            displayName: Initialize and Update Submodules
           - task: DockerCompose@0
             inputs:
               action: Build services
@@ -36,6 +40,10 @@ stages:
       - job: PushJob
         displayName: Push Docker Images
         steps:
+          - script: |
+              git submodule init
+              git submodule update
+            displayName: Initialize and Update Submodules
           - task: DockerCompose@0
             displayName: Push services
             inputs:
