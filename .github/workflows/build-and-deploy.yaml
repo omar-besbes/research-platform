@@ -33,6 +33,8 @@ jobs:
           push: true
           tags: |
             ${{ vars.REGISTRY }}/backend:latest
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/backend:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/backend:buildcache,mode=max
 
       - name: Build and Push Frontend
         uses: docker/build-push-action@v6
@@ -42,6 +44,8 @@ jobs:
           push: true
           tags: |
             ${{ vars.REGISTRY }}/frontend:latest
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/frontend:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/frontend:buildcache,mode=max
 
   deploy:
     runs-on: ubuntu-latest
