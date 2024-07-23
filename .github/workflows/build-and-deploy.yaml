@@ -5,7 +5,6 @@ on:
     branches: [dev]
 
 env:
-  DEPLOYMENT_MANIFEST_PATH: 'manifests/'
   NGNIX_INGRESS_MANIFEST_URL: 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/cloud/deploy.yaml'
 
 jobs:
@@ -90,7 +89,13 @@ jobs:
         uses: Azure/k8s-deploy@v4
         with:
           action: deploy
-          manifests: ${{ env.DEPLOYMENT_MANIFEST_PATH }}
+          manifests: |
+            manifests/backend
+            manifests/elasticsearch
+            manifests/frontend
+            manifests/go-wrapper
+            manifests/minio
+            manifests/postgres
           # strategy: blue-green
           # route-method: service
           # version-switch-buffer: 5
