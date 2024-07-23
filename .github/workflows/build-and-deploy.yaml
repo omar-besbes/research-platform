@@ -34,7 +34,6 @@ jobs:
           push: true
           tags: |
             ${{ vars.REGISTRY }}/backend:latest
-            backend:latest
 
       - name: Build and Push Frontend
         uses: docker/build-push-action@v6
@@ -44,7 +43,6 @@ jobs:
           push: true
           tags: |
             ${{ vars.REGISTRY }}/frontend:latest
-            frontend:latest
 
   deploy:
     runs-on: ubuntu-latest
