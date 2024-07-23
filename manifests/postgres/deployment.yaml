@@ -1,0 +1,43 @@
+# postgres.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: postgres
+          image: efrei.azurecr.io/postgres:16
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: POSTGRES_PASSWORD
+              value: secret
+            - name: POSTGRES_USER
+              value: efrei
+            - name: POSTGRES_DB
+              value: db
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: db-data
+          ports:
+            - containerPort: 5432
+      imagePullSecrets:
+        - name: efreireg
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: db-data-pvc
