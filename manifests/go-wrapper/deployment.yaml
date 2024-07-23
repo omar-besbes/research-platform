@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-wrapper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-wrapper
+  template:
+    metadata:
+      labels:
+        app: go-wrapper
+    spec:
+      containers:
+        - name: go-wrapper
+          image: efrei.azurecr.io/wrapper
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: MINIO_ENDPOINT
+              value: 'minio:9000'
+            - name: MINIO_ACCESS_KEY
+              value: 'minioadmin'
+            - name: MINIO_SECRET_KEY
+              value: 'minioadmin'
+            - name: JWT_SECRET
+              value: 'secret'
+            - name: JWT_MAXIMUM_AGE
+              value: '1d'
+            - name: API_KEY
+              value: 'api_key'
+            - name: BACKEND_URL
+              value: 'http://backend:3011'
+          ports:
+            - containerPort: 1206
+      imagePullSecrets:
+        - name: efreireg

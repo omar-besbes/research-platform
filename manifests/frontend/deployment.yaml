@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: efrei.azurecr.io/frontend
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: PORT
+              value: '3010'
+            - name: BACKEND_URL
+              value: 'http://backend:3011'
+            - name: MINIO_WRAPPER_HTTP_URL
+              value: 'http://wrapper:1206'
+            - name: NEXTAUTH_URL
+              value: 'http://localhost:3010'
+            - name: NEXTAUTH_SECRET
+              value: 'next_auth_secret'
+          ports:
+            - containerPort: 3010
+      imagePullSecrets:
+        - name: efreireg

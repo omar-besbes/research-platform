@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: efrei.azurecr.io/backend
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: NODE_ENV
+              value: 'development'
+            - name: PORT
+              value: '3011'
+            - name: DEBUG
+              value: 'true'
+            - name: DB_TYPE
+              value: postgres
+            - name: DB_URI
+              value: 'postgres://efrei:secret@db:5432/db'
+            - name: FRONTEND_URL
+              value: 'http://frontend:3010'
+            - name: JWT_SECRET
+              value: 'jwt_secret'
+            - name: JWT_MAXIMUM_AGE
+              value: '1d'
+            - name: ELASTICSEARCH_NODE
+              value: 'http://elasticsearch:9200'
+            - name: ELASTICSEARCH_USERNAME
+              value: 'elastic'
+            - name: ELASTICSEARCH_PASSWORD
+              value: 'elastic'
+            - name: MINIO_WRAPPER_WS_URL
+              value: 'ws://wrapper:1206'
+            - name: MINIO_WRAPPER_HTTP_URL
+              value: 'http://wrapper:1206'
+            - name: MINIO_WRAPPER_JWT_SECRET
+              value: 'secret'
+            - name: MINIO_WRAPPER_JWT_MAXIMUM_AGE
+              value: '1d'
+            - name: MINIO_WRAPPER_API_KEY
+              value: 'api_key'
+          ports:
+            - containerPort: 3011
+      imagePullSecrets:
+        - name: efreireg
