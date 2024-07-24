@@ -84,9 +84,6 @@ jobs:
         with:
           action: deploy
           manifests: ${{ env.NGNIX_INGRESS_MANIFEST_URL }}
-          strategy: blue-green
-          route-method: service
-          version-switch-buffer: 0
           namespace: ingress-nginx
 
       - name: Deploy platform
@@ -94,6 +91,3 @@ jobs:
         with:
           action: deploy
           manifests: manifests
-          strategy: blue-green
-          route-method: service
-          version-switch-buffer: 2
