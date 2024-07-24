@@ -5,6 +5,14 @@
 /**/.next
 /**/Dockerfile
 /**/.dockerignore
-/**/docker-compose.yaml
+/**/*.md
+/**/*.yaml
+/**/*.yml
+
+/manifests
 /.vscode
-*.md
+/.github
+/.husky
+
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
