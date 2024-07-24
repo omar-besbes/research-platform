@@ -89,17 +89,11 @@ jobs:
           # version-switch-buffer: 5
           namespace: ingress-nginx
 
-      - name: Deploy the project
+      - name: Deploy platform
         uses: Azure/k8s-deploy@v4
         with:
           action: deploy
-          manifests: |
-            manifests/backend
-            manifests/elasticsearch
-            manifests/frontend
-            manifests/go-wrapper
-            manifests/minio
-            manifests/postgres
+          manifests: manifests
           # strategy: blue-green
           # route-method: service
           # version-switch-buffer: 5
