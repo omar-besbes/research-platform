@@ -39,5 +39,3 @@ spec:
               value: 'http://backend:3011'
           ports:
             - containerPort: 1206
-      imagePullSecrets:
-        - name: efreireg

@@ -57,5 +57,3 @@ spec:
               value: 'api_key'
           ports:
             - containerPort: 3011
-      imagePullSecrets:
-        - name: efreireg

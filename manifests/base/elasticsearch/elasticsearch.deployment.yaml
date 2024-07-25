@@ -36,8 +36,6 @@ spec:
           ports:
             - containerPort: 9200
             - containerPort: 9300
-      imagePullSecrets:
-        - name: efreireg
       volumes:
         - name: elastic-data
           persistentVolumeClaim:

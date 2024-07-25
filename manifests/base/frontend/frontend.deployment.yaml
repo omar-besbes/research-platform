@@ -35,5 +35,3 @@ spec:
               value: 'next_auth_secret'
           ports:
             - containerPort: 3010
-      imagePullSecrets:
-        - name: efreireg
