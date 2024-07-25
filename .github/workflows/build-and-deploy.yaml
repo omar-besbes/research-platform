@@ -86,6 +86,13 @@ jobs:
           manifests: ${{ env.NGNIX_INGRESS_MANIFEST_URL }}
           namespace: ingress-nginx
 
+      - name: Bake deployment
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: kustomize
+          kustomizationPath: manifests/overlays/azure
+          kubectl-version: latest
+
       - name: Deploy platform
         uses: Azure/k8s-deploy@v4
         with:
