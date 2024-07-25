@@ -38,8 +38,6 @@ spec:
           ports:
             - containerPort: 9000
             - containerPort: 9001
-      imagePullSecrets:
-        - name: efreireg
       volumes:
         - name: minio-data
           persistentVolumeClaim:

@@ -35,8 +35,6 @@ spec:
               name: db-data
           ports:
             - containerPort: 5432
-      imagePullSecrets:
-        - name: efreireg
       volumes:
         - name: db-data
           persistentVolumeClaim:
