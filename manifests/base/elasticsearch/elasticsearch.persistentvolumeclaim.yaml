@@ -1,11 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: minio-data-pvc
+  name: elastic-data-pvc
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: managed-csi
   resources:
     requests:
-      storage: 10Gi
+      storage: 5Gi
