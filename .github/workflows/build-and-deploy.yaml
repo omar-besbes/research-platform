@@ -92,9 +92,10 @@ jobs:
           renderEngine: kustomize
           kustomizationPath: manifests/overlays/azure
           kubectl-version: latest
+        id: bake
 
       - name: Deploy platform
         uses: Azure/k8s-deploy@v4
         with:
           action: deploy
-          manifests: manifests
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
