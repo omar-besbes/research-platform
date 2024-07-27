@@ -13,6 +13,10 @@ spec:
       labels:
         app: elasticsearch
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 0
       containers:
         - name: elasticsearch
           image: efrei.azurecr.io/elasticsearch/elasticsearch:8.13.0
