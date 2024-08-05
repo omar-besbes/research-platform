@@ -11,6 +11,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: preview
+    env:
+      DOCKER_NAMESPACE: ${{ vars.DOCKER_NAMESPACE || 'efrei' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,9 +34,9 @@ jobs:
           file: ./apps/backend/Dockerfile
           push: true
           tags: |
-            ${{ vars.REGISTRY }}/backend:latest
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/backend:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/backend:buildcache,mode=max
+            ${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:latest
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:buildcache,mode=max
 
       - name: Build and Push Frontend
         uses: docker/build-push-action@v6
@@ -43,9 +45,9 @@ jobs:
           file: ./apps/frontend/Dockerfile
           push: true
           tags: |
-            ${{ vars.REGISTRY }}/frontend:latest
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/frontend:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/frontend:buildcache,mode=max
+            ${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:latest
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:buildcache,mode=max
 
   deploy:
     runs-on: ubuntu-latest
