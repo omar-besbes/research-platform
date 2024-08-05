@@ -37,6 +37,8 @@ jobs:
             ${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:latest
           cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:buildcache
           cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:buildcache,mode=max
+          labels: |
+            LABEL_SOURCE=https://github.com/${{ github.repository }}
 
       - name: Build and Push Frontend
         uses: docker/build-push-action@v6
@@ -48,6 +50,8 @@ jobs:
             ${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:latest
           cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:buildcache
           cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:buildcache,mode=max
+          labels: |
+            LABEL_SOURCE=https://github.com/${{ github.repository }}
 
   deploy:
     runs-on: ubuntu-latest
