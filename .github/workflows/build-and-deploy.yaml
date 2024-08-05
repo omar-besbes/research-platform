@@ -11,11 +11,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: preview
-    env:
-      DOCKER_NAMESPACE: ${{ vars.DOCKER_NAMESPACE || 'efrei' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./apps/frontend/Dockerfile
+            image: ${{ vars.REGISTRY }}/${{ vars.DOCKER_NAMESPACE || 'efrei' }}/frontend
+          - dockerfile: ./apps/backend/Dockerfile
+            image: ${{ vars.REGISTRY }}/${{ vars.DOCKER_NAMESPACE || 'efrei' }}/backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          context: workflow
+          images: ${{ matrix.image }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,prefix=git-
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+      - name: Extract metadata for Docker cache
+        id: cache-meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=ref,event=branch
+          flavor: |
+            prefix=cache-
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -31,27 +60,14 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/backend/Dockerfile
+          file: ${{ matrix.dockerfile }}
           push: true
-          tags: |
-            ${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:latest
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/backend:buildcache,mode=max
-          labels: |
-            LABEL_SOURCE=https://github.com/${{ github.repository }}
-
-      - name: Build and Push Frontend
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./apps/frontend/Dockerfile
-          push: true
-          tags: |
-            ${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:latest
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/frontend:buildcache,mode=max
-          labels: |
-            LABEL_SOURCE=https://github.com/${{ github.repository }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ steps.cache-meta.outputs.tags }}
+          cache-to: type=registry,ref=${{ steps.cache-meta.outputs.tags }},mode=max
+          build-args: |
+            BUILD_HASH=${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
