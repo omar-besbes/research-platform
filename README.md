@@ -13,18 +13,48 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ## How do I run this?
 
-Run the following command:
+First, run the following command:
 
 ```sh
 # Https is set as default way to fetch repositories
 # For SSH Users: you should run:
-# git config submodule.apps/object-storage-solution.url git@github.com:Mahmoud-nfz/object-storage-solution.git
+# git config submodule.apps/object-storage-solution.url git@github.com:omar-besbes/object-storage-solution.git
 # git submodule sync
 
 # if running for the first time :
 # git submodule update --init --recursive
 git submodule update --remote --merge
+```
+
+Then, choose one of the following options:
+
+### Locally, using docker compose (recommended)
+
+```sh
 docker compose up
+```
+
+### Locally, using k8s
+
+```sh
+# Make sure to add DNS and ingress (ngnix)
+minikube addons enable ingress
+
+# Make sure that the cluster supports `managed-csi` interface for PVs
+minikube addons enable volumesnapshots
+minikube addons enable csi-hostpath-driver
+
+# Create a namespace for the services
+kubectl apply -f manifests/overlays/local/namespace.yaml
+
+# Make sure to build the images and push them to your own docker registry
+kubectl create secret docker-registry efreireg \
+    --namespace=efrei-dev-local
+    --docker-server=<server_name> \
+    --docker-username=<username> \
+    --docker-password=<pwd>
+
+kubectl apply -k manifests/overlays/local
 ```
 
 ## Turborepo
