@@ -1,4 +1,4 @@
-# Grant permission for container groups to pull images from ACR
+# Grant permission for container apps to pull images from ACR
 resource "azurerm_user_assigned_identity" "efrei" {
   name                = "efrei-usrid"
   resource_group_name = var.resource_group_name

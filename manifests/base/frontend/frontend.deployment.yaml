@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: efrei.azurecr.io/frontend
+          image: frontend
           resources:
             limits:
               cpu: 1000m

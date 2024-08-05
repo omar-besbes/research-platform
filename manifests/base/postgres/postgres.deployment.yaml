@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: efrei.azurecr.io/postgres:16
+          image: postgres:16
           resources:
             limits:
               cpu: 1000m
