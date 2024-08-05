@@ -17,7 +17,7 @@ jobs:
         run: echo
     outputs:
       registry: ${{ vars.REGISTRY }}
-      docker-namespace: ${{ vars.DOCKER_NAMESPACE }}
+      docker-namespace: ${{ vars.DOCKER_NAMESPACE || 'efrei' }}
 
   build:
     runs-on: ubuntu-latest
@@ -28,9 +28,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./apps/frontend/Dockerfile
-            image: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace || 'efrei' }}/frontend
+            image: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace }}/frontend
           - dockerfile: ./apps/backend/Dockerfile
-            image: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace || 'efrei' }}/backend
+            image: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace }}/backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,6 +45,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=sha,prefix=git-
+            type=raw,value=latest
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
 
@@ -76,6 +77,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=registry,ref=${{ steps.cache-meta.outputs.tags }}
           cache-to: type=registry,ref=${{ steps.cache-meta.outputs.tags }},mode=max
           build-args: |
