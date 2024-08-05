@@ -8,17 +8,29 @@ env:
   NGNIX_INGRESS_MANIFEST_URL: 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/cloud/deploy.yaml'
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    environment: preview
+    steps:
+      - name: echo
+        if: false
+        run: echo
+    outputs:
+      registry: ${{ vars.REGISTRY }}
+      docker-namespace: ${{ vars.DOCKER_NAMESPACE }}
+
   build:
     runs-on: ubuntu-latest
+    needs: prepare
     environment: preview
     strategy:
       fail-fast: false
       matrix:
         include:
           - dockerfile: ./apps/frontend/Dockerfile
-            image: ${{ vars.REGISTRY }}/${{ vars.DOCKER_NAMESPACE || 'efrei' }}/frontend
+            image: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace || 'efrei' }}/frontend
           - dockerfile: ./apps/backend/Dockerfile
-            image: ${{ vars.REGISTRY }}/${{ vars.DOCKER_NAMESPACE || 'efrei' }}/backend
+            image: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace || 'efrei' }}/backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
