@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: go-wrapper
-          image: efrei.azurecr.io/wrapper
+          image: wrapper
           resources:
             limits:
               cpu: 1000m
