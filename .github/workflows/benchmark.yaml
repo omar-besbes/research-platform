@@ -89,7 +89,7 @@ jobs:
       - name: setup k8s cluster
         run: |-
           minikube delete
-          minikube start --cpus 7 --memory 12g
+          minikube start --cpus 4 --memory 12g
           minikube addons enable metrics-server
           minikube addons enable ingress
           minikube addons enable volumesnapshots
