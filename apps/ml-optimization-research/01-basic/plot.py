@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load JSON data from file
-with open('metrics1.json') as f:
+with open('metrics.json') as f:
     data = json.load(f)
 
 # Process data into a list of rows
