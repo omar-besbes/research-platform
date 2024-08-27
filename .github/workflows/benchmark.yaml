@@ -135,6 +135,16 @@ jobs:
           source venv/bin/activate
           pip3 install -r requirements.txt
 
+      - name: upload dataset to minio
+        uses: hkdobrev/minio-deploy-action@v1
+        with:
+          endpoint: $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'):30001
+          access_key: minioadmin
+          secret_key: minioadmin
+          bucket: 'data'
+          source_dir: 'apps/ml-optimization-research/${{ inputs.dir }}'
+          target_dir: '/'
+
       - name: start benchmark
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: pnpm start
