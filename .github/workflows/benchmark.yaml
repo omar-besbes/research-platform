@@ -1,0 +1,117 @@
+name: Run benchmarks on Github runners
+
+on:
+  workflow_dispatch:
+    inputs:
+      dir:
+        description: The directory to use
+        type: choice
+        required: true
+        options:
+          - '01-basic'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: preview
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          context: workflow
+          images: ${{ inputs.dir }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,prefix=git-
+            type=raw,value=latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+      - name: Extract metadata for Docker cache
+        id: cache-meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ inputs.dir }}
+          tags: |
+            type=ref,event=branch
+          flavor: |
+            prefix=cache-
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+
+      - name: build and push image to registry
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/ml-optimization-research/${{ inputs.dir }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          cache-from: type=registry,ref=${{ steps.cache-meta.outputs.tags }}
+          cache-to: type=registry,ref=${{ steps.cache-meta.outputs.tags }},mode=max
+          build-args: |
+            BUILD_HASH=${{ github.sha }}
+
+  benchmark:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: setup k8s cluster
+        run: |-
+          minikube delete
+          minikube start --cpu 7 --memory 12g
+          minikube addons enable metrics-server
+          minikube addons enable ingress
+          minikube addons enable volumesnapshots
+          minikube addons enable csi-hostpath-driver
+
+      - name: deploy the local overlay of the platform
+        run: kubectl apply -k manifests/overlays/local
+
+      - name: deploy prometheus
+        run: kubectl apply -k manifests/overlays/local/prometheus
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: go to work directory
+        run: cd apps/ml-optimization-research/${{ inputs.dir }}
+
+      - name: setup node environment
+        run: pnpm i
+
+      - name: setup python environment
+        run: |-
+          python3 -m venv venv
+          source venv/bin/activate
+          pip3 install -r requirements.txt
+
+      - name: start benchmark
+        run: pnpm start
+
+      - name: generate heatmap
+        run: python3 plot.py
+
+      - name: upload json file and heatmap
+        uses: actions/upload-artifact@v4
+        with:
+          name: values-${{ inputs.dir }}-${{ github.run_id }}
+          path: |
+            heatmap.png
+            metrics.json
