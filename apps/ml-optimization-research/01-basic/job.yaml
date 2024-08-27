@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-training
+  namespace: efrei-dev-local
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: model-training
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: model-training
+          image: omarbesbes/efrei:01-basic
+          imagePullPolicy: Always
+          env:
+            - name: MINIO_ENDPOINT
+              value: 'minio:9000'
+            - name: MINIO_ACCESS_KEY
+              value: 'minioadmin'
+            - name: MINIO_SECRET_KEY
+              value: 'minioadmin'
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 1000m
+              memory: 2Gi

@@ -1,0 +1,22 @@
+{
+	"name": "01-basic",
+	"version": "1.0.0",
+	"description": "",
+	"main": "run.ts",
+	"scripts": {
+		"start": "rimraf metrics.json && K8S_NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type==\"InternalIP\")].address}') ts-node run.ts"
+	},
+	"keywords": [],
+	"author": "omar-besbes",
+	"license": "ISC",
+	"dependencies": {
+		"@kubernetes/client-node": "^0.21.0",
+		"yaml": "^2.5.0"
+	},
+	"devDependencies": {
+		"@types/node": "^22.5.0",
+		"rimraf": "^6.0.1",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.5.4"
+	}
+}
