@@ -11,9 +11,23 @@ on:
           - '01-basic'
 
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-latest
     environment: preview
+    steps:
+      - name: echo
+        if: false
+        run: echo
+    outputs:
+      registry: ${{ vars.REGISTRY }}
+      docker-namespace: ${{ vars.DOCKER_NAMESPACE || 'efrei' }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    environment: preview
+    env:
+      IMAGE: ${{ needs.prepare.outputs.registry }}/${{ needs.prepare.outputs.docker-namespace }}/${{ inputs.dir }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           context: workflow
-          images: ${{ inputs.dir }}
+          images: ${{ env.IMAGE }}
           tags: |
             type=ref,event=branch
             type=ref,event=tag
@@ -36,7 +50,7 @@ jobs:
         id: cache-meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ inputs.dir }}
+          images: ${{ env.IMAGE }}
           tags: |
             type=ref,event=branch
           flavor: |
