@@ -104,22 +104,23 @@ jobs:
       - name: setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: go to work directory
-        run: cd apps/ml-optimization-research/${{ inputs.dir }}
-
       - name: setup node environment
+        working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: pnpm i
 
       - name: setup python environment
+        working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: |-
           python3 -m venv venv
           source venv/bin/activate
           pip3 install -r requirements.txt
 
       - name: start benchmark
+        working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: pnpm start
 
       - name: generate heatmap
+        working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: python3 plot.py
 
       - name: upload json file and heatmap
@@ -127,5 +128,5 @@ jobs:
         with:
           name: values-${{ inputs.dir }}-${{ github.run_id }}
           path: |
-            heatmap.png
-            metrics.json
+            apps/ml-optimization-research/${{ inputs.dir }}/heatmap.png
+            apps/ml-optimization-research/${{ inputs.dir }}/metrics.json
