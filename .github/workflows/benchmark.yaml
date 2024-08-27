@@ -138,7 +138,7 @@ jobs:
 
       - name: download dataset from kaggle
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
-        run: python3 download_dataset.py --username ${{ secrets.KAGGLE_USERNAME }} --key ${{ secrets.KAGGLE_KEY }} --df oddrationale/mnist-in-csv
+        run: venv/bin/python3 download_dataset.py --username ${{ secrets.KAGGLE_USERNAME }} --key ${{ secrets.KAGGLE_KEY }} --df oddrationale/mnist-in-csv
 
       - name: upload dataset to minio
         uses: hkdobrev/minio-deploy-action@v1
@@ -156,7 +156,7 @@ jobs:
 
       - name: generate heatmap
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
-        run: python3 plot.py
+        run: venv/bin/python3 plot.py
 
       - name: upload json file and heatmap
         uses: actions/upload-artifact@v4
