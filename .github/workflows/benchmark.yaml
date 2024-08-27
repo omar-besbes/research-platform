@@ -9,6 +9,26 @@ on:
         required: true
         options:
           - '01-basic'
+      memory:
+        description: The memory of k8s cluster
+        type: choice
+        default: 12g
+        required: true
+        options:
+          - 12g
+          - 10g
+          - 8g
+          - 6g
+      cpus:
+        description: The cpus of k8s cluster
+        type: choice
+        default: '4'
+        required: true
+        options:
+          - '4'
+          - '3'
+          - '2'
+          - '1'
 
 jobs:
   prepare:
@@ -89,7 +109,7 @@ jobs:
       - name: setup k8s cluster
         run: |-
           minikube delete
-          minikube start --cpus 4 --memory 12g
+          minikube start --cpus ${{ inputs.cpus }} --memory ${{ inputs.memory }}
           minikube addons enable metrics-server
           minikube addons enable ingress
           minikube addons enable volumesnapshots
