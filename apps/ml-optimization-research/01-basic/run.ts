@@ -3,7 +3,7 @@ import * as yaml from 'yaml';
 import * as fs from 'fs';
 
 const configurations = {
-	cpu: ['1000m', '1500m', '2000m', '2500m', '3000m', '4000m', '6000m'],
+	cpu: ['1000m', '1500m', '2000m', '2500m', '3000m'],
 	memory: ['2Gi', '2.5Gi', '3Gi', '4Gi', '6Gi'],
 } as const;
 
