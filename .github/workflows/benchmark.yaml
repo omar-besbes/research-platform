@@ -107,7 +107,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: setup k8s cluster
+      - name: Setup k8s cluster
         run: |-
           minikube delete
           minikube start --cpus ${{ inputs.cpus }} --memory ${{ inputs.memory }}
@@ -116,27 +116,27 @@ jobs:
           minikube addons enable volumesnapshots
           minikube addons enable csi-hostpath-driver
 
-      - name: deploy the local overlay of the platform
+      - name: Deploy the local overlay of the platform
         run: kubectl apply -k manifests/overlays/local
 
-      - name: deploy prometheus
+      - name: Deploy prometheus
         run: kubectl apply -k manifests/overlays/local/prometheus
 
-      - name: setup pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: setup node environment
+      - name: Setup node environment
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: pnpm i
 
-      - name: setup python environment
+      - name: Setup python environment
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: |-
           python3 -m venv venv
           source venv/bin/activate
           pip3 install -r requirements.txt
 
-      - name: download dataset from kaggle
+      - name: Download dataset from kaggle
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
@@ -144,25 +144,29 @@ jobs:
           KAGGLE_DATASET: oddrationale/mnist-in-csv
         run: venv/bin/kaggle datasets download ${{ env.KAGGLE_DATASET }} -p dataset --unzip
 
-      - name: upload dataset to minio
-        uses: hkdobrev/minio-deploy-action@v1
-        with:
-          endpoint: http://$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'):30001
-          access_key: minioadmin
-          secret_key: minioadmin
-          bucket: 'data'
-          source_dir: 'apps/ml-optimization-research/${{ inputs.dir }}/dataset'
-          target_dir: '/'
+      - name: Upload dataset to minio
+        env:
+          MINIO_CLI: https://dl.min.io/client/mc/release/linux-amd64/mc
+          MINIO_ACCESS_KEY: minioadmin
+          MINIO_SECRET_KEY: minioadmin
+          MINIO_DESTINATION_BUCKET: data
+          MINIO_SOURCE_DIR: apps/ml-optimization-research/${{ inputs.dir }}/dataset
+        run: |-
+          curl ${{ env.MINIO_CLI }} --create-dirs -o $HOME/.local/bin/mc
+          chmod +x $HOME/.local/bin/mc
+          MINIO_ENDPOINT=http://$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'):30001
+          mc alias set efrei $MINIO_ENDPOINT ${{ env.MINIO_ACCESS_KEY }} ${{ env.MINIO_SECRET_KEY }}
+          mc mirror --overwrite ${{ env.MINIO_SOURCE_DIR }} efrei/${{ env.MINIO_DESTINATION_BUCKET }}
 
-      - name: start benchmark
+      - name: Start benchmark
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: pnpm start
 
-      - name: generate heatmap
+      - name: Generate heatmap
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: venv/bin/python3 plot.py
 
-      - name: upload json file and heatmap
+      - name: Upload json file and heatmap
         uses: actions/upload-artifact@v4
         with:
           name: values-${{ inputs.dir }}-${{ github.run_id }}
