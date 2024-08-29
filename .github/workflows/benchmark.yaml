@@ -103,6 +103,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment: benchmark
+
+    strategy:
+      fail-fast: false
+      matrix:
+        memory: ['2Gi', '2.5Gi', '3Gi', '4Gi', '6Gi']
+        cpu: ['1000m', '1500m', '2000m', '2500m', '3000m']
+
+    name: benchmark ${{ matrix.cpu }} ${{ matrix.memory }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -158,20 +167,66 @@ jobs:
           until (mc alias set efrei $MINIO_ENDPOINT ${{ env.MINIO_ACCESS_KEY }} ${{ env.MINIO_SECRET_KEY }}) do echo 'Waiting for deployment "minio" to finish...' && sleep 1; done;
           mc mb efrei/${{ env.MINIO_DESTINATION_BUCKET }}
           mc mirror --overwrite ${{ env.MINIO_SOURCE_DIR }} efrei/${{ env.MINIO_DESTINATION_BUCKET }}
-        timeout-minutes: 5
+        timeout-minutes: 3
 
       - name: Start benchmark
+        id: benchmark
+        continue-on-error: true
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
+        env:
+          CONFIG_CPU: ${{ matrix.cpu }}
+          CONFIG_MEMORY: ${{ matrix.memory }}
         run: pnpm start
+        timeout-minutes: 7
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ inputs.dir }}-${{ github.run_id }}-${{ matrix.cpu }}-${{ matrix.memory }}
+          path: apps/ml-optimization-research/${{ inputs.dir }}/metrics.json
+          if-no-files-found: warn
+          overwrite: true
+          retention-days: 1
+
+  aggregate:
+    runs-on: ubuntu-latest
+    needs: benchmark
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts from benchmarks
+        uses: actions/download-artifact@v4
+        with:
+          path: apps/ml-optimization-research/${{ inputs.dir }}/results
+          pattern: benchmark-results-${{ inputs.dir }}-${{ github.run_id }}-*
+          merge-multiple: true
+
+      - name: Collect JSON files
+        run: |-
+          find ./apps/ml-optimization-research/${{ inputs.dir }} -name '*.json' -exec cp {} aggregated-results/ \;
+
+      - name: Aggregate JSON files
+        working-directory: apps/ml-optimization-research/${{ inputs.dir }}
+        run: |-
+          JSON_FILES=results/*.json
+          jq -s '[.[][]]' $JSON_FILES > metrics.json
+
+      - name: Setup python environment
+        working-directory: apps/ml-optimization-research/${{ inputs.dir }}
+        run: |-
+          python3 -m venv venv
+          source venv/bin/activate
+          pip3 install -r requirements.txt
 
       - name: Generate heatmap
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
         run: venv/bin/python3 plot.py
 
-      - name: Upload json file and heatmap
+      - name: Upload final benchmark results and heatmap
         uses: actions/upload-artifact@v4
         with:
-          name: values-${{ inputs.dir }}-${{ github.run_id }}
+          name: benchmark-results-${{ inputs.dir }}-${{ github.run_id }}
           path: |
             apps/ml-optimization-research/${{ inputs.dir }}/heatmap.png
             apps/ml-optimization-research/${{ inputs.dir }}/metrics.json
