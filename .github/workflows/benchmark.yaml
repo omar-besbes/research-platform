@@ -138,7 +138,11 @@ jobs:
 
       - name: download dataset from kaggle
         working-directory: apps/ml-optimization-research/${{ inputs.dir }}
-        run: venv/bin/python3 download_dataset.py --username ${{ secrets.KAGGLE_USERNAME }} --key ${{ secrets.KAGGLE_KEY }} --df oddrationale/mnist-in-csv
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+          KAGGLE_DATASET: oddrationale/mnist-in-csv
+        run: venv/bin/kaggle datasets download ${{ env.KAGGLE_DATASET }} -p dataset --unzip
 
       - name: upload dataset to minio
         uses: hkdobrev/minio-deploy-action@v1
