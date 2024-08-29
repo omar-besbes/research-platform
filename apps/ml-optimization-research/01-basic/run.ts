@@ -184,44 +184,54 @@ async function createAllJobsAndWaitForCompletion() {
 	}
 }
 
+async function createOneJobAndWaitForCompletion(
+	manifest: string,
+	config: CONFIG
+) {
+	const k8sApi = kc.makeApiClient(k8s.BatchV1Api);
+	const jobName = await createJob(manifest, config);
+
+	while (true) {
+		const response = await k8sApi.readNamespacedJobStatus(jobName, namespace);
+		const job = response.body;
+		if ((job.status?.succeeded ?? 0) !== 0 || (job.status?.failed ?? 0) !== 0)
+			break;
+
+		await new Promise((resolve) => setTimeout(resolve, 100)); // Poll every 100ms
+	}
+
+	const metrics = await getMetrics(jobName);
+	saveMetrics(extractConfigFromJobName(jobName), metrics);
+
+	await k8sApi.deleteNamespacedJob(
+		jobName,
+		namespace,
+		undefined,
+		undefined,
+		10, // wait 10s before deleting
+		undefined,
+		'Foreground' // immediately delete dependants
+	);
+}
+
 async function createJobsAndWaitForCompletionOneByOne() {
 	const manifest = fs.readFileSync('./job.yaml', 'utf8');
-	const k8sApi = kc.makeApiClient(k8s.BatchV1Api);
 
 	for (const cpu of configurations.cpu) {
 		for (const memory of configurations.memory) {
 			const config = { cpu, memory };
-			const jobName = await createJob(manifest, config);
-
-			while (true) {
-				const response = await k8sApi.readNamespacedJobStatus(
-					jobName,
-					namespace
-				);
-				const job = response.body;
-				if (
-					(job.status?.succeeded ?? 0) !== 0 ||
-					(job.status?.failed ?? 0) !== 0
-				)
-					break;
-
-				await new Promise((resolve) => setTimeout(resolve, 100)); // Poll every 100ms
-			}
-
-			const metrics = await getMetrics(jobName);
-			saveMetrics(extractConfigFromJobName(jobName), metrics);
-
-			await k8sApi.deleteNamespacedJob(
-				jobName,
-				namespace,
-				undefined,
-				undefined,
-				10, // wait 10s before deleting
-				undefined,
-				'Foreground' // immediately delete dependants
-			);
+			await createOneJobAndWaitForCompletion(manifest, config);
 		}
 	}
 }
 
-createJobsAndWaitForCompletionOneByOne();
+if (process.env.CONFIG_CPU && process.env.CONFIG_MEMORY) {
+	const cpu = (process.env.CONFIG_CPU ?? '2000m') as CPU;
+	const memory = (process.env.CONFIG_MEMORY ?? '4Gi') as MEMORY;
+	const config = { cpu, memory };
+	const manifest = fs.readFileSync('./job.yaml', 'utf8');
+
+	createOneJobAndWaitForCompletion(manifest, config);
+} else {
+	createJobsAndWaitForCompletionOneByOne();
+}
