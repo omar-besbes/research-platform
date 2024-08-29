@@ -2,6 +2,11 @@ import os
 import json
 import kaggle
 import argparse
+import logging
+
+# Configure logging to output to the console
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def create_kaggle_json(username: str, key: str):
     """Create the Kaggle credentials file at ~/.config/kaggle/kaggle.json"""
@@ -21,6 +26,7 @@ def create_kaggle_json(username: str, key: str):
     # Set file permissions to be read/write by the owner only
     os.chmod(kaggle_json_path, 600)
     print(f"Kaggle credentials saved to {kaggle_json_path}")
+    logging.info(f"Kaggle credentials saved to {kaggle_json_path}")
 
 def download_df(df: str):
     """Download dataset from Kaggle using credentials stored in ~/.config/kaggle/kaggle.json"""
