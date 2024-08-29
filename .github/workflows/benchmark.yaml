@@ -147,7 +147,7 @@ jobs:
       - name: upload dataset to minio
         uses: hkdobrev/minio-deploy-action@v1
         with:
-          endpoint: $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'):30001
+          endpoint: http://$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'):30001
           access_key: minioadmin
           secret_key: minioadmin
           bucket: 'data'
