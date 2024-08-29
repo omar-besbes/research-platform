@@ -157,6 +157,7 @@ jobs:
           MINIO_ENDPOINT=http://$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'):30001
           kubectl rollout status -n efrei-dev-local deployment minio
           mc alias set efrei $MINIO_ENDPOINT ${{ env.MINIO_ACCESS_KEY }} ${{ env.MINIO_SECRET_KEY }}
+          mc mb efrei/${{ env.MINIO_DESTINATION_BUCKET }}
           mc mirror --overwrite ${{ env.MINIO_SOURCE_DIR }} efrei/${{ env.MINIO_DESTINATION_BUCKET }}
 
       - name: Start benchmark
