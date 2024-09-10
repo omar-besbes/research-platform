@@ -4,4 +4,3 @@ coverage
 .next
 dist
 node_modules
-*.yaml
