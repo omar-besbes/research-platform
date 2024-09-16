@@ -2,14 +2,14 @@ name: research-platform
 
 services:
   minio:
-    extends: 
+    extends:
       file: apps/object-storage-solution/docker-compose.yml
       service: minio
     networks:
       - minio_network
-  
+
   wrapper:
-    extends: 
+    extends:
       file: apps/object-storage-solution/docker-compose.yml
       service: go-wrapper
     hostname: wrapper
@@ -42,7 +42,7 @@ services:
     env_file:
       - apps/frontend/.env.example
     environment:
-      - BACKEND_URL=http://backend:3001
+      - BACKEND_URL=http://backend:3011
       - MINIO_WRAPPER_HTTP_URL=http://go-wrapper:1206
       - NEXT_PUBLIC_MINIO_WRAPPER_WEBSOCKET_URL=ws://go-wrapper:1206
     networks:
@@ -71,7 +71,7 @@ services:
       - db_network
       - es_network
       - app_network
-  
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
     restart: always
