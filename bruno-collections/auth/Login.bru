@@ -1,0 +1,23 @@
+meta {
+  name: Login
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3011/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "foulen@efrei.com",
+    "password": "SomePwd@2024"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("RT", res.body.data.refreshToken);
+  bru.setEnvVar("AT", res.body.data.accessToken);
+}
