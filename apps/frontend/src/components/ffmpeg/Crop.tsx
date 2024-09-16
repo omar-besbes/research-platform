@@ -38,6 +38,7 @@ export const Crop: React.FC = observer(() => {
 								video.muted = mute;
 							});
 						}}
+						className="bg-primary-300 mx-1 rounded-md px-3 py-2"
 					>
 						{ffmpegStore.transform.mute ? <BsVolumeMute /> : <BsVolumeUp />}
 					</button>
@@ -60,6 +61,7 @@ export const Crop: React.FC = observer(() => {
 								};
 							});
 						}}
+						className="bg-primary-300 mx-1 rounded-md px-3 py-2"
 					>
 						<BsSymmetryVertical />
 					</button>
@@ -82,6 +84,7 @@ export const Crop: React.FC = observer(() => {
 								};
 							});
 						}}
+						className="bg-primary-300 mx-1 rounded-md px-3 py-2"
 					>
 						<BsSymmetryHorizontal />
 					</button>
@@ -92,6 +95,7 @@ export const Crop: React.FC = observer(() => {
 							ffmpegStore.reset();
 						}}
 						title="Reset"
+						className="bg-primary-300 mx-1 rounded-md px-3 py-2"
 					>
 						<BsArrowCounterclockwise />
 					</button>

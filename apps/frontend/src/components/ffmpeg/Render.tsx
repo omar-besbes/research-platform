@@ -1,12 +1,15 @@
+'use client';
+
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import { BsDownload } from 'react-icons/bs';
 import { runInAction } from 'mobx';
 
-import styles from './Ffmpeg.module.scss';
-import { ffmpegStore } from '../../actions/ffmpeg/ffmpegStore';
+import { ffmpegStore } from '@/actions/ffmpeg/ffmpegStore';
+import clsxm from '@/utils/clsxm';
+
 import { Slider } from './Slider';
+import styles from './Ffmpeg.module.scss';
 
 export const Render: React.FC = observer(() => {
 	const [outputUrl, setOutputUrl] = useState<string>();
@@ -99,7 +102,7 @@ export const Render: React.FC = observer(() => {
 	};
 
 	return (
-		<div className={styles.step}>
+		<div className={clsxm(styles.step, 'space-y-3 mb-3')}>
 			{ffmpeg.running ? (
 				<>
 					<div className={styles.actionsRender}>
@@ -114,42 +117,47 @@ export const Render: React.FC = observer(() => {
 					</div>
 				</>
 			) : (
-				<>
+				<div className="space-y-3">
 					<div className={styles.settings}>
-						<div>
-							Scale: {Math.round(scale * 100) / 100}
-							<Slider
-								min={0.1}
-								max={1}
-								value={scale}
-								onChange={(value) => {
-									runInAction(() => {
-										ffmpegStore.transform.scale = value;
-									});
-								}}
-							/>
+						<div className="flex items-center gap-3">
+							<span>Scale: {Math.round(scale * 100) / 100}</span>
+							<div className="grow">
+								<Slider
+									min={0.1}
+									max={1}
+									value={scale}
+									onChange={(value) => {
+										runInAction(() => {
+											ffmpegStore.transform.scale = value;
+										});
+									}}
+								/>
+							</div>
 						</div>
 					</div>
-					<div className={styles.actionsRender}>
-						<button onClick={crop}>
+					<div className="flex gap-3">
+						<button
+							onClick={crop}
+							className="bg-primary-300 rounded-md px-4 py-1.5"
+						>
 							<span>Render MP4</span>
 						</button>
 						{outputUrl && (
 							<a
 								href={outputUrl}
-								download="cropped.mp4"
-								className={clsx('button', styles.download)}
+								download={`cropped-${video.localName}`}
+								className="flex items-center gap-2 bg-primary-300 mx-1 rounded-md px-3 py-1"
 							>
 								<BsDownload />
 								<span>Download</span>
 							</a>
 						)}
 					</div>
-				</>
+				</div>
 			)}
 			{outputUrl && !ffmpeg.running && (
-				<div>
-					<video src={outputUrl} controls />
+				<div className="w-full">
+					<video className="w-full" src={outputUrl} controls />
 				</div>
 			)}
 		</div>

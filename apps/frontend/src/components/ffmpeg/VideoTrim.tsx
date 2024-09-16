@@ -1,12 +1,13 @@
 'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { BsPlay, BsPause } from 'react-icons/bs';
 import { usePointerDrag } from 'react-use-pointer-drag';
-import clsx from 'clsx';
 
 import styles from './Ffmpeg.module.scss';
 import { clamp, humanTime } from '../../utils/helpers';
 import { Time } from '../../types/types';
+import clsxm from '@/utils/clsxm';
 
 interface VideoTrimProps {
 	onChange: (time: Time) => void;
@@ -142,7 +143,7 @@ export const VideoTrim: React.FC<VideoTrimProps> = ({
 
 	return (
 		<>
-			<div className={styles.controls}>
+			<div className="flex my-3 gap-3">
 				<button
 					onClick={() => {
 						if (video.paused) {
@@ -151,6 +152,7 @@ export const VideoTrim: React.FC<VideoTrimProps> = ({
 							video.pause();
 						}
 					}}
+					className="bg-primary-300 mx-1 rounded-md px-3 py-1"
 				>
 					{playing ? <BsPause /> : <BsPlay />}
 				</button>
@@ -168,7 +170,7 @@ export const VideoTrim: React.FC<VideoTrimProps> = ({
 						})}
 					>
 						<div
-							className={clsx(styles.handleLeft, {
+							className={clsxm(styles.handleLeft, {
 								[styles.active]: dragState?.direction === 'left',
 							})}
 							data-time={humanTime(time[0])}
@@ -179,7 +181,7 @@ export const VideoTrim: React.FC<VideoTrimProps> = ({
 							})}
 						/>
 						<div
-							className={clsx(styles.handleRight, {
+							className={clsxm(styles.handleRight, {
 								[styles.active]: dragState?.direction === 'right',
 							})}
 							data-time={humanTime(time[1])}
@@ -191,7 +193,7 @@ export const VideoTrim: React.FC<VideoTrimProps> = ({
 						/>
 					</div>
 					<div
-						className={clsx(styles.current, {
+						className={clsxm(styles.current, {
 							[styles.active]: dragState?.direction === 'seek',
 						})}
 						style={{
@@ -203,7 +205,7 @@ export const VideoTrim: React.FC<VideoTrimProps> = ({
 							paused: video.paused,
 						})}
 						data-time={humanTime(currentTime)}
-					></div>
+					/>
 				</div>
 			</div>
 		</>

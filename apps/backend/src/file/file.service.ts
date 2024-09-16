@@ -86,6 +86,35 @@ export class FileService {
 		}
 	}
 
+	async requestDownload(fileId: string, user: User) {
+		const file = await this.repository.findOne({
+			where: {
+				id: fileId,
+			},
+		});
+
+		if (!file) {
+			throw new BadRequestException('File not found');
+		}
+
+		// Generate the JWT for the new file
+		const jwt = this.jwtService.sign({
+			id: file.id,
+			hash: file.hash,
+			userId: user.id,
+			size: file.size,
+			path: file.path,
+			name: file.name,
+		});
+
+		// Return the JWT and URL
+		return {
+			jwt,
+			url: this.configService.getMinioWrapperConfig().wsUrl,
+			fileName: file.name,
+		};
+	}
+
 	async rollbackUpload(file: File) {
 		return this.repository.delete(file.id);
 	}

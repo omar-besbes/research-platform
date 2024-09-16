@@ -1,10 +1,12 @@
 'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { usePointerDrag } from 'react-use-pointer-drag';
 
+import { Area, Ratio, VideoTransform } from '@/types/types';
+import { clamp } from '@/utils/helpers';
+
 import styles from './Ffmpeg.module.scss';
-import { clamp } from '../../utils/helpers';
-import { Area, Ratio, VideoTransform } from '../../types/types';
 
 const MIN_CROP_SIZE = 100;
 
@@ -224,10 +226,11 @@ export const VideoCrop: React.FC<VideoCropProps> = ({
 	const cropHeight = Math.trunc(area[3] / 2) * 2;
 
 	return (
-		<div>
+		<div className="space-y-4">
 			<div className={styles.options}>
-				<div className="select">
+				<div className="w-fit bg-primary-300 py-1 px-2 rounded-md">
 					<select
+						className="bg-transparent focus:outline-none"
 						value={ratioName}
 						onChange={(e) => {
 							const name = e.target.value;

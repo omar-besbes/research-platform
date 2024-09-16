@@ -35,6 +35,15 @@ export class FileController {
 		return this.fileService.createOne(createFileDto, dataCollection, user);
 	}
 
+	@Get(':id/request-download')
+	@RequirePermission((req) => req.params.id, DataCollectionAction.read)
+	async requestDownload(
+		@Param('id', ParseUUIDPipe) id: string,
+		@AuthenticatedUser() user: User
+	) {
+		return this.fileService.requestDownload(id, user);
+	}
+
 	@Get(':id')
 	@RequirePermission((req) => req.params.id, DataCollectionAction.read)
 	async findFilesByDataCollection(

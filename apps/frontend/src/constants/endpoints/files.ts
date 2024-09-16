@@ -10,4 +10,6 @@ export const files = {
 	) =>
 		getHref(join('files', dataCollectionId, 'direct-children'), searchParams),
 	createFile: () => '/files/create',
+	requestDownload: (fileId: string) =>
+		getHref(join('files', fileId, 'request-download'), {}),
 };
