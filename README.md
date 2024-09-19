@@ -101,6 +101,32 @@ When finished, clean up with this command:
 minikube delete
 ```
 
+## Setting up an account
+
+Now, that we have a running instance of the platform, we need to create an account to be able to login and start interacting with it.
+
+Currently, the only supported method of doing this is by querying the backend service directly.
+
+```sh
+curl -X POST http://localhost:3011/auth/add-user \
+     -H "Content-Type: application/json" \
+     -d '{"email": "foulen@efrei.com"}'
+
+curl -X POST http://localhost:3011/auth/complete-signup \
+     -H "Content-Type: application/json" \
+     -d '{
+           "firstName": "Foulen",
+           "lastName": "Fouleni",
+           "password": "SomePwd@2024",
+           "email": "foulen@efrei.com"
+         }'
+```
+
+And that's it. Now, we have a user named Foulen with email `foulen@efrei.com` and a password `SomePwd@2024`.
+
+> [!Note]
+> All requests that might be needed during development are stored in `bruno-collections`, in the format used by [bruno](https://www.usebruno.com/).
+
 ## Turborepo
 
 ### Build
