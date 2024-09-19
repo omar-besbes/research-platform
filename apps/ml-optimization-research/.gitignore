@@ -1,3 +1,7 @@
 **/metric*.json
 **/*.png
 **/venv
+**/dataset
+**/.bin
+
+!**/results/*
