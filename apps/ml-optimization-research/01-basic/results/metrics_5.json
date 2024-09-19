@@ -1,0 +1,244 @@
+[
+	{
+		"config": {
+			"cpu": "1000m",
+			"memory": "2gi"
+		},
+		"metrics": {
+			"totalTime": 33000,
+			"totalCpuUsage": "25.546331",
+			"totalMemoryUsage": "519229440",
+			"avgCpuUsage": "0.6925899792116563",
+			"avgMemoryUsage": "27151468.72968271"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1000m",
+			"memory": "3gi"
+		},
+		"metrics": {
+			"totalTime": 36000,
+			"totalCpuUsage": "23.148283",
+			"totalMemoryUsage": "1943351296",
+			"avgCpuUsage": "0.7902309500295881",
+			"avgMemoryUsage": "3277834.5138088176"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1000m",
+			"memory": "4gi"
+		},
+		"metrics": {
+			"totalTime": 39000,
+			"totalCpuUsage": "18.254473",
+			"totalMemoryUsage": "1994006528",
+			"avgCpuUsage": "0.7411725224909907",
+			"avgMemoryUsage": "71106280.02978225"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1000m",
+			"memory": "5gi"
+		},
+		"metrics": {
+			"totalTime": 35000,
+			"totalCpuUsage": "26.102503",
+			"totalMemoryUsage": "71245824",
+			"avgCpuUsage": "0.7925989238951451",
+			"avgMemoryUsage": "4241832.817337462"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1500m",
+			"memory": "2gi"
+		},
+		"metrics": {
+			"totalTime": 36000,
+			"totalCpuUsage": "10.558877",
+			"totalMemoryUsage": "1988358144",
+			"avgMemoryUsage": "105415087.26635045"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1500m",
+			"memory": "3gi"
+		},
+		"metrics": {
+			"totalTime": 39000,
+			"totalCpuUsage": "24.535789",
+			"totalMemoryUsage": "1639088128",
+			"avgCpuUsage": "0.7815254037712357",
+			"avgMemoryUsage": "48937671.16287785"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1500m",
+			"memory": "4gi"
+		},
+		"metrics": {
+			"totalTime": 29000,
+			"totalCpuUsage": "11.790157",
+			"totalMemoryUsage": "1940348928"
+		}
+	},
+	{
+		"config": {
+			"cpu": "1500m",
+			"memory": "5gi"
+		},
+		"metrics": {
+			"totalTime": 31000,
+			"totalCpuUsage": "24.930484",
+			"totalMemoryUsage": "91611136",
+			"avgCpuUsage": "0.8958265309157614",
+			"avgMemoryUsage": "29420828.087699227"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2000m",
+			"memory": "2gi"
+		},
+		"metrics": {
+			"totalTime": 31000,
+			"totalCpuUsage": "12.670388",
+			"totalMemoryUsage": "1972527104"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2000m",
+			"memory": "3gi"
+		},
+		"metrics": {
+			"totalTime": 26000,
+			"totalCpuUsage": "21.546021",
+			"totalMemoryUsage": "1939177472",
+			"avgMemoryUsage": "95237883.32729939"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2000m",
+			"memory": "4gi"
+		},
+		"metrics": {
+			"totalTime": 29000,
+			"totalCpuUsage": "16.497141",
+			"totalMemoryUsage": "1860210688"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2000m",
+			"memory": "5gi"
+		},
+		"metrics": {
+			"totalTime": 29000,
+			"totalCpuUsage": "24.34079",
+			"totalMemoryUsage": "1368870912",
+			"avgCpuUsage": "0.7891996009994178",
+			"avgMemoryUsage": "126582777.67908984"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2500m",
+			"memory": "2gi"
+		},
+		"metrics": {
+			"totalTime": 31000,
+			"totalCpuUsage": "24.930179",
+			"totalMemoryUsage": "80633856",
+			"avgCpuUsage": "0.8949841121583798",
+			"avgMemoryUsage": "4648824.214471028"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2500m",
+			"memory": "3gi"
+		},
+		"metrics": {
+			"totalTime": 26000,
+			"totalCpuUsage": "16.025815",
+			"totalMemoryUsage": "1897095168",
+			"avgMemoryUsage": "117290714.81365943"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2500m",
+			"memory": "4gi"
+		},
+		"metrics": {
+			"totalTime": 25000,
+			"totalCpuUsage": "20.269217",
+			"totalMemoryUsage": "1969610752"
+		}
+	},
+	{
+		"config": {
+			"cpu": "2500m",
+			"memory": "5gi"
+		},
+		"metrics": {
+			"totalTime": 30000,
+			"totalCpuUsage": "13.284644",
+			"totalMemoryUsage": "1935716352",
+			"avgMemoryUsage": "107934382.75351584"
+		}
+	},
+	{
+		"config": {
+			"cpu": "3000m",
+			"memory": "2gi"
+		},
+		"metrics": {
+			"totalTime": 27000,
+			"totalCpuUsage": "15.586606",
+			"totalMemoryUsage": "1956720640"
+		}
+	},
+	{
+		"config": {
+			"cpu": "3000m",
+			"memory": "3gi"
+		},
+		"metrics": {
+			"totalTime": 33000,
+			"totalCpuUsage": "9.814666",
+			"totalMemoryUsage": "1953206272",
+			"avgMemoryUsage": "121411423.27894329"
+		}
+	},
+	{
+		"config": {
+			"cpu": "3000m",
+			"memory": "4gi"
+		},
+		"metrics": {
+			"totalTime": 26000,
+			"totalCpuUsage": "13.293261",
+			"totalMemoryUsage": "1913344000"
+		}
+	},
+	{
+		"config": {
+			"cpu": "3000m",
+			"memory": "5gi"
+		},
+		"metrics": {
+			"totalTime": 26000,
+			"totalCpuUsage": "16.440927",
+			"totalMemoryUsage": "1976692736",
+			"avgMemoryUsage": "120290287.516155"
+		}
+	}
+]

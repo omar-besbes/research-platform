@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 const configurations = {
 	cpu: ['1000m', '1500m', '2000m', '2500m', '3000m'],
-	memory: ['2Gi', '2.5Gi', '3Gi', '4Gi', '6Gi'],
+	memory: ['2Gi', '3Gi', '4Gi', '5Gi'],
 } as const;
 
 const namespace = 'efrei-dev-local';
