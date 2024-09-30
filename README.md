@@ -11,7 +11,9 @@ Turborepo Apps:
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-## Technologies
+## Architecture and technologies
+
+[Architecture diagram](https://excalidraw.com/?fbclid=IwAR1CSQt0kIE2a9PcRnIK2FGDwQK3Vf56Uj_QrC8qFF-RyPJ-h7hEVClo-Gc_aem_AeGB0BqbtR5fYrM3ZGNyt-3t9UtIEBxUJ8C10qioSfeNOcY8vuzHQ60pgO0ALllOFWJJaobfrC9scP4up_FVu7aN#room=93f748443c3695e54221,No7JOuB6BPE5r96Y7nDipQ).
 
 This repository makes use of these technologies in order to run:
 
